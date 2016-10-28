@@ -10,6 +10,10 @@
 
 
 
+CWSapi::CWSapi()
+{
+}
+
 CWSapi::CWSapi(CUsbWS* ptrUsbObj)
 {
 	if (!dynamic_cast<CUsbWS*>(ptrUsbObj))	usbObj = *ptrUsbObj;

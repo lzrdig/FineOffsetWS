@@ -5,10 +5,12 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include <getopt.h>
-#include <math.h>
 #include <string.h>
+#include <math.h>
 #include <time.h>
+
+#include <getopt.h>
+
 
 #define WORKPATH "C:\\Users\\dguzun\\Desktop\\"
 #define LOGPATH WORKPATH"%s.log"
@@ -16,7 +18,10 @@
 char		LogPath[255] = "";
 float		pressOffs_hPa = 0;
 
-int _tmain(int argc, _TCHAR* argv[])
+int		LogToScreen = 0;	// log to screen
+int		readflag = 0;	// Read the weather station or use the cache file.
+
+int main(int argc, char* argv[])
 {
 	int bflag = 0;	// Display fixed block
 	int dflag = 0;	// Dump decoded fixed block data
@@ -34,6 +39,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	char	Buf[40], Buf2[200];
 
 	strcpy(LogPath, LOGPATH);
+
 
 	while ((c = getopt(argc, argv, "bcdf:n:rpswxv:")) != -1)
 	{

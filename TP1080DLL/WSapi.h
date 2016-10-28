@@ -1,16 +1,21 @@
 #pragma once
 
+#pragma warning( disable : 4305)
+#pragma warning( disable : 4244)
+#pragma warning( disable : 4838)
+
 #include "TP1080Defines.h"
 #include "UsbWS.h"
 
-#define WORKPATH "C:\\Users\\dguzun\\Desktop\\"
-#define LOGPATH WORKPATH"%s.log"
+//#define WORKPATH "C:\\Users\\dguzun\\Desktop\\"
+//#define LOGPATH WORKPATH"%s.log"
 
 class CWSapi
 {
 private:
 	CUsbWS usbObj;
 public:
+	CWSapi();
 	CWSapi(CUsbWS* ptrUsbObj);
 
 	int		vLevel = 0;	// print more messages (0=only Errors, 3=all)

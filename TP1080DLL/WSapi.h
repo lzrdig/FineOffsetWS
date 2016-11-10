@@ -3,24 +3,76 @@
 #pragma warning( disable : 4305)
 #pragma warning( disable : 4244)
 #pragma warning( disable : 4838)
+#pragma warning( disable : 4309)
+#pragma warning( disable : 4018)
 
-#include "TP1080Defines.h"
+
 #include "UsbWS.h"
 
-//#define WORKPATH "C:\\Users\\dguzun\\Desktop\\"
-//#define LOGPATH WORKPATH"%s.log"
 
-class CWSapi
+#include "TP1080Defines.h"
+
+
+//--------  the interaction point that exposes the WSapi singleton class
+
+#define TP1080DLL_EXPORT 
+
+
+#if defined(TP1080DLL_EXPORT) // inside DLL
+#   define TP1080DLL   __declspec(dllexport)
+#else // outside DLL
+#   define TP1080DLL   __declspec(dllimport)
+#endif  // TP1080DLL_EXPORT
+
+
+
+
+class ISingleton
+{
+public:
+	int		vLevel = 0;			// print more messages (0=only Errors, 3=all)
+	char	vDst = 'c';			// print more messages ('c'=ToScreen, 'f'=ToFile, 'b'=ToBoth)
+
+	// Weather Station properties
+	unsigned char m_buf[WS_BUFFER_SIZE] = { 0 };	// Raw WS data
+	time_t m_previous_timestamp = 0;				// Previous readout
+	time_t m_timestamp = 0;							// Current readout
+
+	virtual int CWS_Open() = 0;
+	virtual int CWS_Close(int NewDataFlg) = 0;
+	virtual void MsgPrintf(int Level, const char *fmt, ...) = 0;
+	virtual unsigned short CWS_unsigned_short(unsigned char* raw) = 0;
+
+	virtual int CWS_Read() = 0;
+	virtual int CWF_Write(char arg, const char* fname, const char* ftype) = 0;
+
+	virtual void CWS_print_decoded_data() = 0;
+};
+
+
+
+extern "C" TP1080DLL ISingleton & GetSingleton();
+
+//--------  end of implementation of the interaction point
+
+
+
+
+// A factory of IKlass-implementing objects looks thus
+typedef ISingleton* (__cdecl *iklass_factory)();
+
+
+class CWSapi : public ISingleton
 {
 private:
-	CUsbWS usbObj;
+	CUsbWS *_ptrUsbObj;
 public:
 	CWSapi();
 	CWSapi(CUsbWS* ptrUsbObj);
 
-	int		vLevel = 0;	// print more messages (0=only Errors, 3=all)
-	char	vDst = 'c';	// print more messages ('c'=ToScreen, 'f'=ToFile, 'b'=ToBoth)
-	int		readflag = 0;	// Read the weather station or use the cache file.
+	
+	
+	int		readflag = 0;		// Read the weather station or use the cache file.
 	int		LogToScreen = 0;	// log to screen
 
 	unsigned short	old_pos = 0;	// last index of previous read
@@ -29,6 +81,7 @@ public:
 
 	void CWS_Cache(char isStoring);
 	void CWS_print_decoded_data();
+
 	int CWS_Open();
 	int CWS_Close(int NewDataFlg);
 
@@ -49,12 +102,11 @@ public:
 
 	void MsgPrintf(int Level, const char *fmt, ...);
 
-	// Weather Station properties
-	unsigned char m_buf[WS_BUFFER_SIZE] = { 0 };	// Raw WS data
-	time_t m_previous_timestamp = 0;		// Previous readout
-	time_t m_timestamp = 0;				// Current readout
+
 
 
 	~CWSapi();
 };
+
+
 

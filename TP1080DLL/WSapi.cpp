@@ -8,6 +8,21 @@
 #include <time.h>
 
 
+#define VID 0x1941
+#define PID 0x8021
+
+
+
+
+ISingleton & GetSingleton()
+{
+	static CWSapi inst;
+	return inst;
+}
+
+
+
+
 
 
 CWSapi::CWSapi()
@@ -16,7 +31,7 @@ CWSapi::CWSapi()
 
 CWSapi::CWSapi(CUsbWS* ptrUsbObj)
 {
-	if (!dynamic_cast<CUsbWS*>(ptrUsbObj))	usbObj = *ptrUsbObj;
+	if (!dynamic_cast<CUsbWS*>(ptrUsbObj))	_ptrUsbObj = ptrUsbObj;
 }
 
 void CWSapi::CWS_Cache(char isStoring)
@@ -68,7 +83,7 @@ int CWSapi::CWS_Open()
 	int	ret = 0;
 
 	if (readflag)
-		ret = usbObj.CUSB_Open(0x1941, 0x8021);
+		ret = _ptrUsbObj->CUSB_Open(VID, PID);
 
 	if (ret == 0) {
 		CWS_Cache(WS_CACHE_READ);	// Read cache file
@@ -87,7 +102,7 @@ int CWSapi::CWS_Close(int NewDataFlg)
 	strftime(Buf, sizeof(Buf), "%Y-%m-%d %H:%M:%S", localtime(&m_timestamp));
 	MsgPrintf(2, "last record read   %s\n", Buf);
 	if (readflag)
-		usbObj.CUSB_Close();
+		_ptrUsbObj->CUSB_Close();
 	return 0;
 }
 
@@ -139,7 +154,7 @@ short CWSapi::CWS_read_fixed_block()
 	char		NewDataFlg = 0;
 
 	for (i = WS_FIXED_BLOCK_START; i<WS_FIXED_BLOCK_SIZE; i += WS_BUFFER_CHUNK)
-	if (usbObj.CUSB_read_block(i, (char*)&fb_buf[i])<0)
+	if (_ptrUsbObj->CUSB_read_block(i, (char*)&fb_buf[i])<0)
 		return 0; //failure while reading data
 	// Check for new data
 	memcpy(&m_buf[WS_FIXED_BLOCK_START], fb_buf, 0x10); //disables change detection on the rain val positions 
@@ -380,7 +395,7 @@ int CWSapi::CWS_Read()
 	for (i = 0; i<data_count;) {
 		if (!(current_pos&WS_BUFFER_RECORD)) {
 			// Read 2 records on even position
-			n = usbObj.CUSB_read_block(current_pos, (char*)DataBuf);
+			n = _ptrUsbObj->CUSB_read_block(current_pos, (char*)DataBuf);
 			if (n<32)
 				return(-1);
 			i += 2;

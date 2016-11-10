@@ -386,7 +386,7 @@ void CWS_Cache(char isStoring);
 void CWS_print_decoded_data();
 
 int CWS_Open();
-int CWS_Close();
+int CWS_Close(int NewDataFlg);
 
 int CWS_Read();
 

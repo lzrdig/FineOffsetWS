@@ -1,5 +1,11 @@
 // FineOffsetWS.cpp : Defines the entry point for the console application.
 //
+#pragma warning( disable : 4305)
+#pragma warning( disable : 4244)
+#pragma warning( disable : 4838)
+#pragma warning( disable : 4309)
+#pragma warning( disable : 4018)
+
 
 //#include "stdafx.h"
 #define VERSION "V2.0.131015"
@@ -11,7 +17,8 @@
 #include <string.h>
 #include <signal.h>
 #include <time.h>
-#include <lusb0_usb.h>
+
+#include "lusb0_usb.h"
 
 
 

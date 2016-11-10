@@ -2,6 +2,15 @@
     DYNAMIC LINK LIBRARY : TP1080DLL Project Overview
 ========================================================================
 
+A library of functions that constitute the interface from lower level USB functionality
+to the higher level Read, Write and Control functions. At some extent it could be considered
+as an API for communication with FineOffset weather station via USB communication.
+
+
+
+
+
+
 AppWizard has created this TP1080DLL DLL for you.
 
 This file contains a summary of what you will find in each of the files that

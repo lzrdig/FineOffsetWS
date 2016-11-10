@@ -1,12 +1,7 @@
 #include "stdafx.h"
+
 #include "UsbWS.h"
 
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
-#include <signal.h>
-#include <time.h>
-#include <lusb0_usb.h>
 
 
 CUsbWS::CUsbWS()
@@ -107,7 +102,7 @@ void CUsbWS::CUSB_Close()
 
 void CUsbWS::static_USB_Close()
 {
-	gUsbObj.CUSB_Close();
+	getInstance().CUSB_Close();
 }
 
 short CUsbWS::CUSB_read_block(unsigned short ptr, char* buf)
@@ -163,10 +158,4 @@ void CUsbWS::MsgPrintf(int Level, const char *fmt, ...)
 			fclose(f);
 		}
 	}
-}
-
-
-
-CUsbWS::~CUsbWS()
-{
 }

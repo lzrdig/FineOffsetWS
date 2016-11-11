@@ -1018,7 +1018,7 @@ int main(int argc, char **argv)
 
 		CWS_Close(NewDataFlg);	// Write the cache file and close the weather station
 
-		printf("Press enter key...");
+		printf("Press ENTER key to exit...");
 		getchar();
 	}
 	return 0;

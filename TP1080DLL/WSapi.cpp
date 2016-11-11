@@ -14,7 +14,7 @@
 
 
 
-ISingleton & GetSingleton()
+ISingleton & APIENTRY GetSingleton()
 {
 	static CWSapi inst;
 	return inst;
@@ -25,13 +25,13 @@ ISingleton & GetSingleton()
 
 
 
+//CWSapi::CWSapi()
+//{
+//}
+
 CWSapi::CWSapi()
 {
-}
-
-CWSapi::CWSapi(CUsbWS* ptrUsbObj)
-{
-	if (!dynamic_cast<CUsbWS*>(ptrUsbObj))	_ptrUsbObj = ptrUsbObj;
+	//_UsbObj = CUsbWS::getInstance();
 }
 
 void CWSapi::CWS_Cache(char isStoring)
@@ -48,7 +48,7 @@ void CWSapi::CWS_Cache(char isStoring)
 		}
 	}
 	else {	// WS_CACHE_WRITE
-		if (m_timestamp<3600) {
+		if (m_timestamp < 3600) {
 			strftime(Buf, sizeof(Buf), "%Y-%m-%d %H:%M:%S", localtime(&m_timestamp));
 			MsgPrintf(0, "wrong timestamp %s - cachefile not written\n", Buf);
 		}
@@ -66,7 +66,7 @@ void CWSapi::CWS_print_decoded_data()
 	char s2[100];
 	int  i;
 
-	for (i = WS_LOWER_FIXED_BLOCK_START; i<WS_LOWER_FIXED_BLOCK_END; i++) {
+	for (i = WS_LOWER_FIXED_BLOCK_START; i < WS_LOWER_FIXED_BLOCK_END; i++) {
 		CWS_decode(&m_buf[ws_format[i].pos],
 			ws_format[i].ws_type,
 			ws_format[i].scale,
@@ -83,7 +83,7 @@ int CWSapi::CWS_Open()
 	int	ret = 0;
 
 	if (readflag)
-		ret = _ptrUsbObj->CUSB_Open(VID, PID);
+		ret = CUsbWS::getInstance().CUSB_Open(VID, PID);
 
 	if (ret == 0) {
 		CWS_Cache(WS_CACHE_READ);	// Read cache file
@@ -102,7 +102,7 @@ int CWSapi::CWS_Close(int NewDataFlg)
 	strftime(Buf, sizeof(Buf), "%Y-%m-%d %H:%M:%S", localtime(&m_timestamp));
 	MsgPrintf(2, "last record read   %s\n", Buf);
 	if (readflag)
-		_ptrUsbObj->CUSB_Close();
+		CUsbWS::getInstance().CUSB_Close();
 	return 0;
 }
 
@@ -134,7 +134,7 @@ short CWSapi::CWS_DataHasChanged(unsigned char OldBuf[], unsigned char NewBuf[],
 	// returns 0 if nothing changed, otherwise 1
 	short NewDataFlg = 0, i;
 
-	for (i = 0; i<size; ++i) {
+	for (i = 0; i < size; ++i) {
 		if (OldBuf[i] != NewBuf[i]) {
 			NewDataFlg = 1;
 			MsgPrintf(3, "%04X(+%02X): %02X -> %02X\n",
@@ -153,10 +153,10 @@ short CWSapi::CWS_read_fixed_block()
 	unsigned char	fb_buf[WS_FIXED_BLOCK_SIZE];
 	char		NewDataFlg = 0;
 
-	for (i = WS_FIXED_BLOCK_START; i<WS_FIXED_BLOCK_SIZE; i += WS_BUFFER_CHUNK)
-	if (_ptrUsbObj->CUSB_read_block(i, (char*)&fb_buf[i])<0)
-		return 0; //failure while reading data
-	// Check for new data
+	for (i = WS_FIXED_BLOCK_START; i < WS_FIXED_BLOCK_SIZE; i += WS_BUFFER_CHUNK)
+		if (CUsbWS::getInstance().CUSB_read_block(i, (char*)&fb_buf[i]) < 0)
+			return 0; //failure while reading data
+		// Check for new data
 	memcpy(&m_buf[WS_FIXED_BLOCK_START], fb_buf, 0x10); //disables change detection on the rain val positions 
 	NewDataFlg = CWS_DataHasChanged(&m_buf[WS_FIXED_BLOCK_START], fb_buf, sizeof(fb_buf));
 	// Check for valid data
@@ -210,7 +210,7 @@ int CWSapi::CWS_calculate_rain(unsigned short current_pos, unsigned short data_c
 
 	unsigned short i;
 	// Calculate backwards through buffer, not all values will be calculated if buffer is too short
-	for (i = 0; i<data_count; i++) {
+	for (i = 0; i < data_count; i++) {
 		if (m_buf[current_pos + WS_DELAY] == 0xFF) {
 			MsgPrintf(0, "CWS_calc_rain: invalid delay value at 0x%04X\n", current_pos + WS_DELAY);
 			return -1;
@@ -286,7 +286,7 @@ int CWSapi::CWS_decode(unsigned char* raw, enum ws_types ws_type, float scale, f
 	int           b = -(log(scale) + 0.5), i, m = 0, n = 0;
 	float         fresult;
 
-	if (b<1) b = 1;
+	if (b < 1) b = 1;
 	if (!result) return 0;
 	else *result = '\0';
 	switch (ws_type) {
@@ -315,16 +315,16 @@ int CWSapi::CWS_decode(unsigned char* raw, enum ws_types ws_type, float scale, f
 		break;
 	case dt:
 	{
-			   unsigned char year, month, day, hour, minute;
-			   year = CWS_bcd_decode(raw[0]);
-			   month = CWS_bcd_decode(raw[1]);
-			   day = CWS_bcd_decode(raw[2]);
-			   hour = CWS_bcd_decode(raw[3]);
-			   minute = CWS_bcd_decode(raw[4]);
-			   m = 5;
-			   n = sprintf(result, "%4d-%02d-%02d %02d:%02d", year + 2000, month, day, hour, minute);
+		unsigned char year, month, day, hour, minute;
+		year = CWS_bcd_decode(raw[0]);
+		month = CWS_bcd_decode(raw[1]);
+		day = CWS_bcd_decode(raw[2]);
+		hour = CWS_bcd_decode(raw[3]);
+		minute = CWS_bcd_decode(raw[4]);
+		m = 5;
+		n = sprintf(result, "%4d-%02d-%02d %02d:%02d", year + 2000, month, day, hour, minute);
 	}
-		break;
+	break;
 	case tt:
 		m = 2;
 		n = sprintf(result, "%02d:%02d", CWS_bcd_decode(raw[0]), CWS_bcd_decode(raw[1]));
@@ -356,7 +356,7 @@ int CWSapi::CWS_decode(unsigned char* raw, enum ws_types ws_type, float scale, f
 	default:
 		MsgPrintf(0, "CWS_decode: Unknown type %u\n", ws_type);
 	}
-	for (i = 0; i<m; ++i) {
+	for (i = 0; i < m; ++i) {
 		if (raw[i] != 0xFF) return n;
 	}
 	if (m) {
@@ -392,11 +392,11 @@ int CWSapi::CWS_Read()
 		MsgPrintf(0, "CWS_Read: wrong current_pos=0x%04X\n", current_pos);
 		return -1;
 	}
-	for (i = 0; i<data_count;) {
+	for (i = 0; i < data_count;) {
 		if (!(current_pos&WS_BUFFER_RECORD)) {
 			// Read 2 records on even position
-			n = _ptrUsbObj->CUSB_read_block(current_pos, (char*)DataBuf);
-			if (n<32)
+			n = CUsbWS::getInstance().CUSB_read_block(current_pos, (char*)DataBuf);
+			if (n < 32)
 				return(-1);
 			i += 2;
 			NewDataFlg |= CWS_DataHasChanged(&m_buf[current_pos], DataBuf, sizeof(DataBuf));
@@ -409,6 +409,18 @@ int CWSapi::CWS_Read()
 		old_pos = CWS_inc_ptr(current_pos);
 
 	return NewDataFlg;
+}
+
+/*---------------------------------------------------------------------------*/
+void CWSapi::CWS_SetReadFlag(int readFlag)
+{
+	readflag = readFlag;
+	CUsbWS::getInstance().CUSB_SetReadFlag(readFlag);
+}
+
+int CWSapi::CWS_GetReadFlag()
+{
+	return CUsbWS::getInstance().CUSB_GetReadFlag();
 }
 
 /***************** The CWF class *********************************************/
@@ -460,7 +472,7 @@ int CWSapi::CWF_Write(char arg, const char* fname, const char* ftype)
 		--dat2_count;
 	}
 
-	for (i = 0; i<data_count; i++)
+	for (i = 0; i < data_count; i++)
 	{
 		if ((arg != 'c') && (arg != 'f'))
 			CWS_calculate_rain(current_pos, dat2_count + i);
@@ -477,7 +489,7 @@ int CWSapi::CWF_Write(char arg, const char* fname, const char* ftype)
 			ws3600_format[WS_W3600_PRESSURE].offset = pressOffs_hPa;
 			for (j = 0; ws3600_format[j].name[0]; j++) {
 				int pos = ws3600_format[j].pos;
-				if (pos<WS_BUFFER_RECORD)	//record or fixed block?
+				if (pos < WS_BUFFER_RECORD)	//record or fixed block?
 					pos += current_pos;	//record
 				CWS_decode(&m_buf[pos],
 					ws3600_format[j].ws_type,
@@ -496,7 +508,7 @@ int CWSapi::CWF_Write(char arg, const char* fname, const char* ftype)
 			ws3600_format[WS_W3600_PRESSURE].offset = pressOffs_hPa;
 			for (j = 0; ws3600_format[j].name[0]; j++) {
 				int pos = ws3600_format[j].pos;
-				if (pos<WS_BUFFER_RECORD)	//record or fixed block?
+				if (pos < WS_BUFFER_RECORD)	//record or fixed block?
 					pos += current_pos;	//record
 				if (FileIsEmpty)
 					fprintf(f, " %s", ws3600_format[j].name);
@@ -512,7 +524,7 @@ int CWSapi::CWF_Write(char arg, const char* fname, const char* ftype)
 		case 'p':
 			// Save in pywws raw format
 			n = strftime(s1, 100, "%Y-%m-%d %H:%M:%S", gmtime(&timestamp));
-			for (j = 0; j<WS_PYWWS_RECORDS; j++) {
+			for (j = 0; j < WS_PYWWS_RECORDS; j++) {
 				CWS_decode(&m_buf[current_pos + pywws_format[j].pos],
 					pywws_format[j].ws_type,
 					pywws_format[j].scale,
@@ -529,7 +541,7 @@ int CWSapi::CWF_Write(char arg, const char* fname, const char* ftype)
 			pws_format[WS_PWS_PRESSURE].offset
 				= pressOffs_hPa * WS_SCALE_hPa_TO_inHg;
 
-			for (j = 0; j<WS_PWS_RECORDS; j++) {
+			for (j = 0; j < WS_PWS_RECORDS; j++) {
 				if (j == WS_PWS_HOURLY_RAIN || j == WS_PWS_DAILY_RAIN) {
 					CWS_decode(&m_buf[pws_format[j].pos],
 						pws_format[j].ws_type,
@@ -554,7 +566,7 @@ int CWSapi::CWF_Write(char arg, const char* fname, const char* ftype)
 			wug_format[WS_WUG_PRESSURE].offset
 				= pressOffs_hPa * WS_SCALE_hPa_TO_inHg;
 
-			for (j = 0; j<WS_WUG_RECORDS; j++) {
+			for (j = 0; j < WS_WUG_RECORDS; j++) {
 				if (j == WS_WUG_HOURLY_RAIN || j == WS_WUG_DAILY_RAIN) {
 					CWS_decode(&m_buf[wug_format[j].pos],
 						wug_format[j].ws_type,
@@ -575,7 +587,7 @@ int CWSapi::CWF_Write(char arg, const char* fname, const char* ftype)
 		case 'x':
 			// Save in XML format
 			n = strftime(s1, 100, "  <wsd date=\"%Y-%m-%d %H:%M:%S\"", gmtime(&timestamp));
-			for (j = 0; j<WS_RECORDS; j++) {
+			for (j = 0; j < WS_RECORDS; j++) {
 				CWS_decode(&m_buf[current_pos + ws_format[j].pos],
 					ws_format[j].ws_type,
 					ws_format[j].scale,
@@ -617,7 +629,7 @@ void CWSapi::MsgPrintf(int Level, const char *fmt, ...)
 	va_list argptr;
 	FILE	*f;
 
-	if (Level>vLevel)
+	if (Level > vLevel)
 		return;
 	va_start(argptr, fmt);
 	vsprintf(Buf, fmt, argptr);

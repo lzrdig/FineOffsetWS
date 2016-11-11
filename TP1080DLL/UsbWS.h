@@ -55,6 +55,9 @@ public:
 	static void static_USB_Close();
 	short CUSB_read_block(unsigned short ptr, char* buf);
 
+	void CUSB_SetReadFlag(int readFlag);
+	int CUSB_GetReadFlag();
+
 	// utility funcitons ( would be nice to have them as extensions like in C#)
 	void MsgPrintf(int Level, const char *fmt, ...);
 };

@@ -48,4 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="tp1080lib.def">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

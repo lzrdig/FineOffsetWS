@@ -75,10 +75,10 @@ int main(int argc, char* argv[])
 	strcpy(LogPath, LOGPATH);
 
 	// Load the DLL
-	//HINSTANCE dll_handle = ::LoadLibrary(TEXT("mylib.dll"));
+	//HINSTANCE dll_handle = ::LoadLibrary(TEXT("TP1080DLL.dll"));
 	//if (!dll_handle) {
-	//	std::cerr << "Unable to load DLL!\n";
-	//	printf("Unable to load DLL!\n")
+	//	//std::cerr << "Unable to load DLL!\n";
+	//	printf("Unable to load DLL!\n");
 	//	return 1;
 	//}
 
@@ -112,6 +112,7 @@ int main(int argc, char* argv[])
 			break;
 		case 'c':
 			readflag = 1;
+			myUsbApi.CWS_SetReadFlag(readflag);
 			LogToScreen = 1;
 			break;
 		case 'n': {
@@ -125,6 +126,7 @@ int main(int argc, char* argv[])
 			break;
 		case 'f':
 			readflag = 1;
+			myUsbApi.CWS_SetReadFlag(readflag);
 			switch (optarg[0]) {
 			case 'f':	fflag = 1; break;
 			case 'p':	pflag = 1; break;
@@ -146,7 +148,7 @@ int main(int argc, char* argv[])
 					myUsbApi.MsgPrintf(0, "Wrong option -v%s. Used -v%cc instead.\n", optarg, optarg[0]);
 				case 'c':
 					myUsbApi.vDst = 'c'; break;
-			}
+				}
 			else {
 				myUsbApi.MsgPrintf(0, "Wrong option -v%s. Used -v0c instead.\n", optarg);
 				myUsbApi.vDst = 'c';
@@ -191,7 +193,7 @@ int main(int argc, char* argv[])
 	if (myUsbApi.vLevel >= 3) {
 		int i;
 		strcpy(Buf2, " Cmd:");
-		for (i = 0; i<argc; ++i) {
+		for (i = 0; i < argc; ++i) {
 			sprintf(Buf2 + strlen(Buf2), " %s", argv[i]);
 		}
 	}
@@ -199,8 +201,8 @@ int main(int argc, char* argv[])
 
 	if (0 == myUsbApi.CWS_Open()) {	// Read the cache file and open the weather station
 		if (readflag)
-		if (myUsbApi.CWS_Read())		// Read the weather station
-			NewDataFlg = 1;
+			if (myUsbApi.CWS_Read())		// Read the weather station
+				NewDataFlg = 1;
 
 		//calc press. offset (representing station height)
 		pressOffs_hPa = 0.1 * (

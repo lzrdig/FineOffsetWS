@@ -135,7 +135,15 @@ short CUsbWS::CUSB_read_block(unsigned short ptr, char* buf)
 	return ret;
 }
 
+void CUsbWS::CUSB_SetReadFlag(int readFlag)
+{
+	readflag = readFlag;
+}
 
+int CUsbWS::CUSB_GetReadFlag()
+{
+	return readflag;
+}
 
 void CUsbWS::MsgPrintf(int Level, const char *fmt, ...)
 {

@@ -15,10 +15,10 @@
 
 //--------  the interaction point that exposes the WSapi singleton class
 
-#define TP1080DLL_EXPORT 
+//#define TP1080DLL_EXPORTS 
 
 
-#if defined(TP1080DLL_EXPORT) // inside DLL
+#if defined(TP1080DLL_EXPORTS) // inside DLL
 #   define TP1080DLL   __declspec(dllexport)
 #else // outside DLL
 #   define TP1080DLL   __declspec(dllimport)
@@ -46,12 +46,15 @@ public:
 	virtual int CWS_Read() = 0;
 	virtual int CWF_Write(char arg, const char* fname, const char* ftype) = 0;
 
+	virtual void CWS_SetReadFlag(int readFlag) = 0;
+	virtual int CWS_GetReadFlag() = 0;
+
 	virtual void CWS_print_decoded_data() = 0;
 };
 
 
 
-extern "C" TP1080DLL ISingleton & GetSingleton();
+extern "C" TP1080DLL ISingleton & APIENTRY GetSingleton();
 
 //--------  end of implementation of the interaction point
 
@@ -59,16 +62,16 @@ extern "C" TP1080DLL ISingleton & GetSingleton();
 
 
 // A factory of IKlass-implementing objects looks thus
-typedef ISingleton* (__cdecl *iklass_factory)();
+//typedef ISingleton* (__cdecl *iklass_factory)();
 
 
 class CWSapi : public ISingleton
 {
 private:
-	CUsbWS *_ptrUsbObj;
+	//CUsbWS &_UsbObj;
 public:
 	CWSapi();
-	CWSapi(CUsbWS* ptrUsbObj);
+	//CWSapi(CUsbWS* ptrUsbObj);
 
 	
 	
@@ -99,6 +102,10 @@ public:
 
 	int CWS_Read();
 	int CWF_Write(char arg, const char* fname, const char* ftype);
+
+	void CWS_SetReadFlag(int readFlag);
+
+	int CWS_GetReadFlag();
 
 	void MsgPrintf(int Level, const char *fmt, ...);
 

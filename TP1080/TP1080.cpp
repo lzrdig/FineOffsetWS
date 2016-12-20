@@ -1,14 +1,13 @@
 // TP1080.cpp : Defines the entry point for the console application.
 //
 
-//#include "stdafx.h"
 
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 #include <math.h>
 #include <time.h>
-//#include <iostream>
+
 
 #include "getopt.h"
 
@@ -16,11 +15,6 @@
 
 #pragma warning( disable : 4996)
 
-
-
-
-//#define WORKPATH "C:\\Users\\dguzun\\Desktop\\"
-//#define LOGPATH WORKPATH"%s.log"
 
 
 
@@ -81,7 +75,6 @@ int main(int argc, char* argv[])
 	//	printf("Unable to load DLL!\n");
 	//	return 1;
 	//}
-
 	// Get the function from the DLL
 	//iklass_factory factory_func = reinterpret_cast<iklass_factory>(
 	//	::GetProcAddress(dll_handle, "GetSingleton"));
@@ -91,7 +84,6 @@ int main(int argc, char* argv[])
 	//	::FreeLibrary(dll_handle);
 	//	return 1;
 	//}
-
 	//// Ask the factory for a new object implementing the IKlass
 	//// interface
 	//ISingleton* instance = factory_func();

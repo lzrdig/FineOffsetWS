@@ -68,7 +68,8 @@
       <IgnoreSpecificDefaultLibraries>LIBCMTD</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)$(Platform)\$(Configuration)\TP1080DLL\TP1080DLL.dll" "$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\" /Y /I</Command>
+      <Command>xcopy "$(SolutionDir)$(Platform)\$(Configuration)\TP1080DLL\TP1080DLL.dll" "$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\" /Y /I
+xcopy "$(SolutionDir)$(Platform)\$(Configuration)\libusb0\libusb0.dll" "$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\" /Y /I</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

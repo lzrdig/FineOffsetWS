@@ -370,7 +370,7 @@ void print_bytes(char *address, int len);
 struct usb_dev_handle *devh;
 struct usb_device *dev;
 
-void list_devices();
+//void list_devices();
 struct usb_device *find_device(int vendor, int product);
 
 // USB class

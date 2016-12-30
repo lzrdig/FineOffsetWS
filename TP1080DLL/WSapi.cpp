@@ -34,6 +34,7 @@ CWSapi::CWSapi()
 	//_UsbObj = CUsbWS::getInstance();
 }
 
+/*---------------------------------------------------------------------------*/
 void CWSapi::CWS_Cache(char isStoring)
 {
 	int	n;
@@ -93,7 +94,6 @@ int CWSapi::CWS_Open()
 	return ret;
 }
 
-/*---------------------------------------------------------------------------*/
 int CWSapi::CWS_Close(int NewDataFlg)
 {
 	char	Buf[40];
@@ -107,6 +107,50 @@ int CWSapi::CWS_Close(int NewDataFlg)
 }
 
 /*---------------------------------------------------------------------------*/
+int CWSapi::CWS_Read()
+{
+	// Read fixed block
+	// - Get current_pos
+	// - Get data_count
+	// Read records backwards from current_pos untill previous current_pos reached
+	// Step 0x10 in the range 0x10000 to 0x100, wrap at 0x100
+	// USB is read in 0x20 byte chunks, so read at even positions only
+	// return 1 if new data, otherwise 0
+
+	m_timestamp = time(NULL);	// Set to current time
+	old_pos = CWS_unsigned_short(&m_buf[WS_CURRENT_POS]);
+
+	int 		n, NewDataFlg = CWS_read_fixed_block();
+	unsigned char	DataBuf[WS_BUFFER_CHUNK];
+
+	unsigned short	data_count = CWS_unsigned_short(&m_buf[WS_DATA_COUNT]);
+	unsigned short	current_pos = CWS_unsigned_short(&m_buf[WS_CURRENT_POS]);
+	unsigned short	i;
+
+	if (current_pos%WS_BUFFER_RECORD) {
+		MsgPrintf(0, "CWS_Read: wrong current_pos=0x%04X\n", current_pos);
+		return -1;
+	}
+	for (i = 0; i < data_count;) {
+		if (!(current_pos&WS_BUFFER_RECORD)) {
+			// Read 2 records on even position
+			n = CUsbWS::getInstance().CUSB_read_block(current_pos, (char*)DataBuf);
+			if (n < 32)
+				return(-1);
+			i += 2;
+			NewDataFlg |= CWS_DataHasChanged(&m_buf[current_pos], DataBuf, sizeof(DataBuf));
+		}
+		if (current_pos == (old_pos &(~WS_BUFFER_RECORD)))
+			break;	//break only on even position
+		current_pos = CWS_dec_ptr(current_pos);
+	}
+	if ((old_pos == 0) || (old_pos == 0xFFFF))	//cachefile empty or empty eeprom was read
+		old_pos = CWS_inc_ptr(current_pos);
+
+	return NewDataFlg;
+}
+
+/*---------------------------------------------------------------------------*/
 unsigned short CWSapi::CWS_dec_ptr(unsigned short ptr)
 {
 	// Step backwards through buffer.
@@ -117,7 +161,6 @@ unsigned short CWSapi::CWS_dec_ptr(unsigned short ptr)
 	return ptr;
 }
 
-/*---------------------------------------------------------------------------*/
 unsigned short CWSapi::CWS_inc_ptr(unsigned short ptr)
 {
 	// Step forward through buffer.
@@ -368,50 +411,6 @@ int CWSapi::CWS_decode(unsigned char* raw, enum ws_types ws_type, float scale, f
 }
 
 /*---------------------------------------------------------------------------*/
-int CWSapi::CWS_Read()
-{
-	// Read fixed block
-	// - Get current_pos
-	// - Get data_count
-	// Read records backwards from current_pos untill previous current_pos reached
-	// Step 0x10 in the range 0x10000 to 0x100, wrap at 0x100
-	// USB is read in 0x20 byte chunks, so read at even positions only
-	// return 1 if new data, otherwise 0
-
-	m_timestamp = time(NULL);	// Set to current time
-	old_pos = CWS_unsigned_short(&m_buf[WS_CURRENT_POS]);
-
-	int 		n, NewDataFlg = CWS_read_fixed_block();
-	unsigned char	DataBuf[WS_BUFFER_CHUNK];
-
-	unsigned short	data_count = CWS_unsigned_short(&m_buf[WS_DATA_COUNT]);
-	unsigned short	current_pos = CWS_unsigned_short(&m_buf[WS_CURRENT_POS]);
-	unsigned short	i;
-
-	if (current_pos%WS_BUFFER_RECORD) {
-		MsgPrintf(0, "CWS_Read: wrong current_pos=0x%04X\n", current_pos);
-		return -1;
-	}
-	for (i = 0; i < data_count;) {
-		if (!(current_pos&WS_BUFFER_RECORD)) {
-			// Read 2 records on even position
-			n = CUsbWS::getInstance().CUSB_read_block(current_pos, (char*)DataBuf);
-			if (n < 32)
-				return(-1);
-			i += 2;
-			NewDataFlg |= CWS_DataHasChanged(&m_buf[current_pos], DataBuf, sizeof(DataBuf));
-		}
-		if (current_pos == (old_pos &(~WS_BUFFER_RECORD)))
-			break;	//break only on even position
-		current_pos = CWS_dec_ptr(current_pos);
-	}
-	if ((old_pos == 0) || (old_pos == 0xFFFF))	//cachefile empty or empty eeprom was read
-		old_pos = CWS_inc_ptr(current_pos);
-
-	return NewDataFlg;
-}
-
-/*---------------------------------------------------------------------------*/
 void CWSapi::CWS_SetReadFlag(int readFlag)
 {
 	readflag = readFlag;
@@ -422,6 +421,9 @@ int CWSapi::CWS_GetReadFlag()
 {
 	return CUsbWS::getInstance().CUSB_GetReadFlag();
 }
+
+
+
 
 /***************** The CWF class *********************************************/
 int CWSapi::CWF_Write(char arg, const char* fname, const char* ftype)

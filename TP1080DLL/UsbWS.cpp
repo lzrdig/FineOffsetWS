@@ -124,6 +124,8 @@ short CUsbWS::CUSB_read_block(unsigned short ptr, char* buf)
 	tbuf[6] = 0;		// READ ADDRESS LOW
 	tbuf[7] = 0x20;		// END MARK
 
+	BYTE tmp = tbuf[0];
+
 	// Prepare read of 32-byte chunk from position ptr
 	int ret = usb_control_msg(devh, USB_TYPE_CLASS + USB_RECIP_INTERFACE, 9, 0x200, 0, tbuf, 8, 1000);
 	if (ret<0) MsgPrintf(0, "usb_control_msg failed (%d) whithin CUSB_read_block(%04X,...)\n", ret, ptr);

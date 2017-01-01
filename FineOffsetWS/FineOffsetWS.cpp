@@ -20,6 +20,7 @@
 
 #include "lusb0_usb.h"
 
+#include "FineOffsetWS.h"
 
 
 /* on PC e.g. Ubuntu */
@@ -44,7 +45,7 @@ char		LogPath[255] = "";
 float		pressOffs_hPa = 0;
 
 /*****************************************************************************/
-#include "FineOffsetWS.h"
+
 
 /******* helper functions ****************************************************/
 void  MsgPrintf(int Level, const char *fmt, ...)
@@ -213,7 +214,7 @@ short CUSB_read_block(unsigned short ptr, char* buf)
 	tbuf[7] = 0x20;		// END MARK
 
 						// Prepare read of 32-byte chunk from position ptr
-	int ret = usb_control_msg(devh, USB_TYPE_CLASS + USB_RECIP_INTERFACE, 9, 0x200, 0, tbuf, 8, 1000);
+	int ret = usb_control_msg(devh, USB_TYPE_CLASS + USB_RECIP_INTERFACE, 0x09, 0x200, 0, tbuf, 8, 1000);
 	if (ret<0) MsgPrintf(0, "usb_control_msg failed (%d) whithin CUSB_read_block(%04X,...)\n", ret, ptr);
 	else {
 		// Read 32-byte chunk and place in buffer buf
@@ -652,8 +653,9 @@ int CWS_Read()
 		if (!(current_pos&WS_BUFFER_RECORD)) {
 			// Read 2 records on even position
 			n = CUSB_read_block(current_pos, (char*)DataBuf);
-			if (n<32)
-				exit(1);
+			if (n < 32)
+				//exit(1);
+				getchar();
 			i += 2;
 			NewDataFlg |= CWS_DataHasChanged(&m_buf[current_pos], DataBuf, sizeof(DataBuf));
 		}

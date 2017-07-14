@@ -94,89 +94,89 @@ int main(int argc, char* argv[])
 
 	while ((c = getopt(argc, argv, "bcdf:n:rpswxv:")) != -1)
 	{
-		switch (c)
-		{
-		case 'b':	// Display fixed block
-			bflag = 1;
-			break;
-		case 'd':	// Dump decoded fixed block data
-			dflag = 1;
-			break;
-		case 'c':
-			readflag = 1;
-			myUsbApi.CWS_SetReadFlag(readflag);
-			LogToScreen = 1;
-			break;
-		case 'n': {
-			readflag = 1;
-			strftime(LogPath, sizeof(LogPath), optarg, localtime(&tAkt));
-			myUsbApi.MsgPrintf(3, "option -n with value '%s'\n", LogPath);
-			break;
-		}
-		case 'r':	// Dump all weather station records
-			rflag = 1;
-			break;
-		case 'f':
-			readflag = 1;
-			myUsbApi.CWS_SetReadFlag(readflag);
-			switch (optarg[0]) {
-			case 'f':	fflag = 1; break;
-			case 'p':	pflag = 1; break;
-			case 's':	sflag = 1; break;
-			case 'w':	wflag = 1; break;
-			case 'x':	xflag = 1; break;
-			default:
-				myUsbApi.MsgPrintf(0, "wrong option -f%s\n", optarg);
-				abort();
+		switch (c)	{
+			case 'b':	// Display fixed block
+				bflag = 1;
+				break;
+			case 'd':	// Dump decoded fixed block data
+				dflag = 1;
+				break;
+			case 'c':
+				readflag = 1;
+				myUsbApi.CWS_SetReadFlag(readflag);
+				LogToScreen = 1;
+				break;
+			case 'n': {
+				readflag = 1;
+				strftime(LogPath, sizeof(LogPath), optarg, localtime(&tAkt));
+				myUsbApi.MsgPrintf(3, "option -n with value '%s'\n", LogPath);
 				break;
 			}
-			break;
-		case 'v':
-			if (optarg[1])
-				switch (optarg[1]) {
-				case 'b':	myUsbApi.vDst = 'b'; break;
-				case 'f':	myUsbApi.vDst = 'f'; break;
-				default:
-					myUsbApi.MsgPrintf(0, "Wrong option -v%s. Used -v%cc instead.\n", optarg, optarg[0]);
-				case 'c':
-					myUsbApi.vDst = 'c'; break;
+			case 'r':	// Dump all weather station records
+				rflag = 1;
+				break;
+			case 'f':
+				readflag = 1;
+				myUsbApi.CWS_SetReadFlag(readflag);
+				switch (optarg[0]) 
+				{
+					case 'f':	fflag = 1; break;
+					case 'p':	pflag = 1; break;
+					case 's':	sflag = 1; break;
+					case 'w':	wflag = 1; break;
+					case 'x':	xflag = 1; break;
+					default:
+						myUsbApi.MsgPrintf(0, "wrong option -f%s\n", optarg);
+						abort();
+						break;
 				}
-			else {
-				myUsbApi.MsgPrintf(0, "Wrong option -v%s. Used -v0c instead.\n", optarg);
-				myUsbApi.vDst = 'c';
-			}
-			myUsbApi.vLevel = atoi(optarg);
-			//				MsgPrintf (3, "option v with value '%s' / Level=%d Dst=%c\n", optarg, vLevel, vDst);
-			break;
-		case '?':
-			printf("\n");
-			printf("Fine Offset Weather Station Reader ""VERSION""\n\n");
-			printf("(c) 2013 Joerg Schulz (Josch at abwesend dot de)\n");
-			printf("(c) 2010 Arne-Jørgen Auberg (arne.jorgen.auberg@gmail.com)\n");
-			printf("Credits to Michael Pendec, Jim Easterbrook, Timo Juhani Lindfors\n\n");
-			printf("See http://fowsr.googlecode.com for more information\n\n");
-			printf("options\n");
-			printf(" -f[p|s|w|x|f]	set Logformat for weather data\n");
-			printf(" 	-fp	Logfile in pywws format\n");
-			printf("	-fs	Logfile in PWS Weather format\n");
-			printf("	-fw	Logfile in Wunderground format\n");
-			printf("	-fx	Logfile in XML format\n");
-			printf("	-ff	Logfile in FHEM log format\n");
-			printf(" -c	Log to screen (in FHEM-WS3600 format)\n");
-			printf(" -n<filename>	set full path and name for weather data, may contain\n");
-			printf("		%%-wildcards of the POSIX strftime function and %%%%s\n");
-			printf("		for a type specific name part\n");
-			printf("		default for pywws is: ""WORKPATH""pywws.log\n");
-			printf(" -b	Display fixed block\n");
-			printf(" -d	Display decoded fixed block data\n");
-			printf(" -r	Dump all weather station records\n");
-			printf(" -v<Level><Destination>	output debug messages\n");
-			printf(" 	Level: 0-3	0-only errors, 3-all\n");
-			printf(" 	Destination:	(c)onsole, (f)ile (same place as weather data), (b)oth\n\n");
-			//exit(0);
-			break;
-		default:
-			abort();
+				break;
+			case 'v':
+				if (optarg[1])
+					switch (optarg[1]) {
+					case 'b':	myUsbApi.vDst = 'b'; break;
+					case 'f':	myUsbApi.vDst = 'f'; break;
+					default:
+						myUsbApi.MsgPrintf(0, "Wrong option -v%s. Used -v%cc instead.\n", optarg, optarg[0]);
+					case 'c':
+						myUsbApi.vDst = 'c'; break;
+					}
+				else {
+					myUsbApi.MsgPrintf(0, "Wrong option -v%s. Used -v0c instead.\n", optarg);
+					myUsbApi.vDst = 'c';
+				}
+				myUsbApi.vLevel = atoi(optarg);
+				//				MsgPrintf (3, "option v with value '%s' / Level=%d Dst=%c\n", optarg, vLevel, vDst);
+				break;
+			case '?':
+				printf("\n");
+				printf("Fine Offset Weather Station Reader ""VERSION""\n\n");
+				printf("(c) 2013 Joerg Schulz (Josch at abwesend dot de)\n");
+				printf("(c) 2010 Arne-Jørgen Auberg (arne.jorgen.auberg@gmail.com)\n");
+				printf("Credits to Michael Pendec, Jim Easterbrook, Timo Juhani Lindfors\n\n");
+				printf("See http://fowsr.googlecode.com for more information\n\n");
+				printf("options\n");
+				printf(" -f[p|s|w|x|f]	set Logformat for weather data\n");
+				printf(" 	-fp	Logfile in pywws format\n");
+				printf("	-fs	Logfile in PWS Weather format\n");
+				printf("	-fw	Logfile in Wunderground format\n");
+				printf("	-fx	Logfile in XML format\n");
+				printf("	-ff	Logfile in FHEM log format\n");
+				printf(" -c	Log to screen (in FHEM-WS3600 format)\n");
+				printf(" -n<filename>	set full path and name for weather data, may contain\n");
+				printf("		%%-wildcards of the POSIX strftime function and %%%%s\n");
+				printf("		for a type specific name part\n");
+				printf("		default for pywws is: ""WORKPATH""pywws.log\n");
+				printf(" -b	Display fixed block\n");
+				printf(" -d	Display decoded fixed block data\n");
+				printf(" -r	Dump all weather station records\n");
+				printf(" -v<Level><Destination>	output debug messages\n");
+				printf(" 	Level: 0-3	0-only errors, 3-all\n");
+				printf(" 	Destination:	(c)onsole, (f)ile (same place as weather data), (b)oth\n\n");
+				//exit(0);
+				break;
+			default:
+				abort();
 		}
 	}
 
@@ -203,6 +203,7 @@ int main(int argc, char* argv[])
 			);
 		myUsbApi.MsgPrintf(2, "pressure offset = %.1fhPa (about %.0fm a.s.l.)\n",
 			pressOffs_hPa, pressOffs_hPa * 8);
+
 		// Write the log files
 		if (LogToScreen)
 			myUsbApi.CWF_Write('c', "", "");

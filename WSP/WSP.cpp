@@ -27,6 +27,10 @@
 // including the EasyWeather.dat layout
 // (http://www.jim-easterbrook.me.uk/weather/ew/).
 //
+
+// --dumpmem "C:\Users\dguzun\Desktop\wsp.dat"
+//
+
 #pragma warning( disable : 4018)
 
 #include "WSP.h"
@@ -1581,7 +1585,7 @@ int read_arguments(int argc, char **argv)
 		default:
 		{
 			show_usage(argv[0]);
-			abort();
+			//abort();
 			break;
 		}
 		}

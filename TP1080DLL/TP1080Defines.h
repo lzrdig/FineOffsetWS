@@ -21,35 +21,35 @@
 #define WS_CACHE_WRITE	1
 
 // Weather Station buffer parameters
-#define WS_BUFFER_SIZE		0x10000	// Size of total buffer
-#define WS_BUFFER_START		0x100	// First address of up to 4080 buffer records
-#define WS_BUFFER_END		0xFFF0	// Start of last buffer record
-#define WS_BUFFER_RECORD	0x10	// Size of one buffer record
-#define WS_BUFFER_CHUNK		0x20	// Size of chunk received over USB
+#define WS_BUFFER_SIZE			0x10000	// Size of total buffer
+#define WS_BUFFER_START			0x100	// First address of up to 4080 buffer records
+#define WS_BUFFER_END			0xFFF0	// Start of last buffer record
+#define WS_BUFFER_RECORD		0x10	// Size of one buffer record
+#define WS_BUFFER_CHUNK			0x20	// Size of chunk received over USB
 #define WS_FIXED_BLOCK_START	0x0000	// First address of fixed block
-#define WS_FIXED_BLOCK_SIZE	0x0100	// Size of fixed block
+#define WS_FIXED_BLOCK_SIZE		0x0100	// Size of fixed block
 
 // Weather Station buffer memory positions
-#define WS_DELAY		 0	// Position of delay parameter
-#define WS_HUMIDITY_IN		 1	// Position of inside humidity parameter
-#define WS_TEMPERATURE_IN	 2	// Position of inside temperature parameter
-#define WS_HUMIDITY_OUT		 4	// Position of outside humidity parameter
-#define WS_TEMPERATURE_OUT	 5	// Position of outside temperature parameter
-#define WS_ABS_PRESSURE		 7	// Position of absolute pressure parameter
-#define WS_WIND_AVE		 9	// Position of wind direction parameter
-#define WS_WIND_GUST		10	// Position of wind direction parameter
-#define WS_WIND_DIR		12	// Position of wind direction parameter
-#define WS_RAIN			13	// Position of rain parameter
-#define WS_STATUS		15	// Position of status parameter
-#define WS_DATA_COUNT		27	// Position of data_count parameter
-#define WS_CURRENT_POS		30	// Position of current_pos parameter
+#define WS_DELAY				0	// Position of delay parameter
+#define WS_HUMIDITY_IN			1	// Position of inside humidity parameter
+#define WS_TEMPERATURE_IN		2	// Position of inside temperature parameter
+#define WS_HUMIDITY_OUT			4	// Position of outside humidity parameter
+#define WS_TEMPERATURE_OUT		5	// Position of outside temperature parameter
+#define WS_ABS_PRESSURE			7	// Position of absolute pressure parameter
+#define WS_WIND_AVE				9	// Position of wind direction parameter
+#define WS_WIND_GUST			10	// Position of wind direction parameter
+#define WS_WIND_DIR				12	// Position of wind direction parameter
+#define WS_RAIN					13	// Position of rain parameter
+#define WS_STATUS				15	// Position of status parameter
+#define WS_DATA_COUNT			27	// Position of data_count parameter
+#define WS_CURRENT_POS			30	// Position of current_pos parameter
 #define WS_CURR_REL_PRESSURE	32	// Position of current relative pressure parameter
 #define WS_CURR_ABS_PRESSURE	34	// Position of current absolute pressure parameter
 
 // Calculated rain parameters
 // NOTE: These positions are NOT stored in the Weather Station
 #define WS_RAIN_HOUR		0x08	// Position of hourly calculated rain
-#define WS_RAIN_DAY		0x0A	// Position of daily calculated rain
+#define WS_RAIN_DAY			0x0A	// Position of daily calculated rain
 #define WS_RAIN_WEEK		0x0C	// Position of weekly calculated rain
 #define WS_RAIN_MONTH		0x0E	// Position of monthly calculated rain
 
@@ -57,8 +57,8 @@
 // The following setting parameters are for reference only
 // A future user interface could interpret these parameters
 // Unit settings
-#define WS_UNIT_SETTING_IN_T_C_F	0x01
-#define WS_UNIT_SETTING_OUT_T_C_F	0x02
+#define WS_UNIT_SETTING_IN_T_C_F		0x01
+#define WS_UNIT_SETTING_OUT_T_C_F		0x02
 #define WS_UNIT_SETTING_RAIN_FALL_CM_IN	0x04
 #define WS_UNIT_SETTING_PRESSURE_HPA	0x20
 #define WS_UNIT_SETTING_PRESSURE_INHG	0x40
@@ -70,16 +70,16 @@
 #define WS_UNIT_SETTING_WIND_SPEED_MH	0x08
 #define WS_UNIT_SETTING_WIND_SPEED_BFT	0x10
 // Display format 0
-#define WS_DISPLAY_FORMAT_P_ABS_REL	0x01
+#define WS_DISPLAY_FORMAT_P_ABS_REL		0x01
 #define WS_DISPLAY_FORMAT_WSP_AVG_GUST	0x02
-#define WS_DISPLAY_FORMAT_H_24_12	0x04
+#define WS_DISPLAY_FORMAT_H_24_12		0x04
 #define WS_DISPLAY_FORMAT_DDMMYY_MMDDYY	0x08
 #define WS_DISPLAY_FORMAT_TS_H_12_24	0x10
 #define WS_DISPLAY_FORMAT_DATE_COMPLETE	0x20
 #define WS_DISPLAY_FORMAT_DATE_AND_WK	0x40
 #define WS_DISPLAY_FORMAT_ALARM_TIME	0x80
 // Display format 1
-#define WS_DISPLAY_FORMAT_OUT_T		0x01
+#define WS_DISPLAY_FORMAT_OUT_T			0x01
 #define WS_DISPLAY_FORMAT_OUT_WINDCHILL	0x02
 #define WS_DISPLAY_FORMAT_OUT_DEW_POINT	0x04
 #define WS_DISPLAY_FORMAT_RAIN_FALL_1H	0x08
@@ -95,23 +95,23 @@
 #define WS_ALARM_ENABLE_OUT_RH_LO	0x40
 #define WS_ALARM_ENABLE_OUT_RH_HI	0x80
 // Alarm enable 1
-#define WS_ALARM_ENABLE_WSP_AVG		0x01
-#define WS_ALARM_ENABLE_WSP_GUST	0x02
+#define WS_ALARM_ENABLE_WSP_AVG			0x01
+#define WS_ALARM_ENABLE_WSP_GUST		0x02
 #define WS_ALARM_ENABLE_RAIN_FALL_1H	0x04
 #define WS_ALARM_ENABLE_RAIN_FALL_24H	0x08
-#define WS_ALARM_ENABLE_ABS_P_LO	0x10
-#define WS_ALARM_ENABLE_ABS_P_HI	0x20
-#define WS_ALARM_ENABLE_REL_P_LO	0x40
-#define WS_ALARM_ENABLE_REL_P_HI	0x80
+#define WS_ALARM_ENABLE_ABS_P_LO		0x10
+#define WS_ALARM_ENABLE_ABS_P_HI		0x20
+#define WS_ALARM_ENABLE_REL_P_LO		0x40
+#define WS_ALARM_ENABLE_REL_P_HI		0x80
 // Alarm enable 2
-#define WS_ALARM_ENABLE_IN_T_LO		0x01
-#define WS_ALARM_ENABLE_IN_T_HI		0x02
-#define WS_ALARM_ENABLE_OUT_T_LO	0x04
-#define WS_ALARM_ENABLE_OUT_T_HI	0x08
+#define WS_ALARM_ENABLE_IN_T_LO			0x01
+#define WS_ALARM_ENABLE_IN_T_HI			0x02
+#define WS_ALARM_ENABLE_OUT_T_LO		0x04
+#define WS_ALARM_ENABLE_OUT_T_HI		0x08
 #define WS_ALARM_ENABLE_WINDCHILL_LO	0x10
 #define WS_ALARM_ENABLE_WINDCHILL_HI	0x20
-#define WS_ALARM_ENABLE_DEWPOINT_LO	0x40
-#define WS_ALARM_ENABLE_DEWPOINT_HI	0x80
+#define WS_ALARM_ENABLE_DEWPOINT_LO		0x40
+#define WS_ALARM_ENABLE_DEWPOINT_HI		0x80
 
 
 // Conversion parameters for english units

@@ -1,5 +1,12 @@
 ========================================================================
     CONSOLE APPLICATION : WSP Project Overview
+
+This project is a compilation of the code written by Joakim Söderberg and the libusb library.
+For the argument passing in a console app the getopt library was added.
+
+The app is to establish connection to a FineOffset type weather station (WH-1080).
+The device registers itself as a HID type of device on most OS.
+
 ========================================================================
 
 AppWizard has created this WSP application for you.
@@ -22,19 +29,22 @@ WSP.vcxproj.filters
     "Source Files" filter).
 
 WSP.cpp
-    This is the main application source file.
+    This is the main application source file provided by Joakim Söderberg.
+	Small modifications were done to adapt to getopt library.
 
 /////////////////////////////////////////////////////////////////////////////
 Other standard files:
 
-StdAfx.h, StdAfx.cpp
+StdAfx.h, StdAfx.cpp - these files have been excluded
     These files are used to build a precompiled header (PCH) file
     named WSP.pch and a precompiled types file named StdAfx.obj.
 
 /////////////////////////////////////////////////////////////////////////////
 Other notes:
 
-AppWizard uses "TODO:" comments to indicate parts of the source code you
-should add to or customize.
+The main point to understand in the communication with FineOffset is that its entire memory
+consists of two sections. The total size of the memory is (256 + 4080)*32 bytes (spans from 0x000 to 0xFFF).
+
+The 0x000 - 0x100 section stoes the station settings data. The rest is allocated for storing the weather data history.
 
 /////////////////////////////////////////////////////////////////////////////

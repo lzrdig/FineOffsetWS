@@ -66,7 +66,7 @@ typedef struct program_settings_s
 {
 	int debug;					// Debug-level.
 	mode_t mode;				// Mode.
-	unsigned int count;			// The number of history entires to fetch. 0 = All.
+	unsigned int count;			// The number of history entries to fetch. 0 = All.
 	int show_status;			// 0 or 1. Show current status of device.
 	int show_alarms;			// 0 or 1. Shows the current alarms set on the device.
 	int show_settings;			// 0 or 1. Shows the unit/display settings for the device.

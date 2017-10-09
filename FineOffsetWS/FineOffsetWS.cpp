@@ -729,8 +729,8 @@ int CWF_Write(char arg, const char* fname, const char* ftype)
 		switch (arg) {
 		case 'c':
 			// Output in FHEM ws3600 format
-			//				n=strftime(s1,sizeof(s1),"DTime %d-%m-%Y %H:%M:%S\n", gmtime(&timestamp));
-			n = strftime(s1, sizeof(s1), "DTime %d-%m-%Y %H:%M:%S\nETime %s\n", localtime(&timestamp));
+			n=strftime(s1,sizeof(s1),"DTime %d-%m-%Y %H:%M:%S\n", gmtime(&timestamp));
+			//n = strftime(s1, sizeof(s1), "DTime %d-%m-%Y %H:%M:%S\nETime %s\n", localtime(&timestamp));
 			// Calculate relative pressure
 			ws3600_format[WS_W3600_PRESSURE].offset = pressOffs_hPa;
 			for (j = 0; ws3600_format[j].name[0]; j++) {

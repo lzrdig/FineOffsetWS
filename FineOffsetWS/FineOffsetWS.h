@@ -150,11 +150,11 @@ struct ws_record {
 	{ "abs_pressure" ,  7, us,  0.1 }, // Multiply by 0.1 to get hPa        (920:1080), 0xFFFF means invalid
 	{ "wind_ave"     ,  9, wa,  0.1 }, // Multiply by 0.1 to get m/s        (0:50)    , 0xFF means invalid
 	{ "wind_gust"    , 10, wg,  0.1 }, // Multiply by 0.1 to get m/s        (0:50)    , 0xFF means invalid
-									   // 11, wind speed, high bits     // Lower 4 bits are the average wind speed high bits, upper 4 bits are the gust wind speed high bits
+						// 11, wind speed, high bits     // Lower 4 bits are the average wind speed high bits, upper 4 bits are the gust wind speed high bits
 	{ "wind_dir"     , 12, ub, 22.5 }, // Multiply by 22.5 to get ° from north (0-15), 7th bit indicates invalid data
 	{ "rain"         , 13, us,  0.3 }, // Multiply by 0.3 to get mm
 	{ "status"       , 15, pb,  1.0 }, // 6th bit indicates loss of contact with sensors, 7th bit indicates rainfall overflow
-									   // The lower fixed block
+						// The lower fixed block
 	{ "read_period"      , 16, ub, 1.0 }, // Minutes between each stored reading (1:240)
 	{ "units0"           , 17, ub, 1.0 }, // Unit setting flags       (Bits 0,1,2,    5,6,7)
 	{ "units_wind_speed" , 18, ub, 1.0 }, // Unit wind speed settings (Bits 0,1,2,3,4      )
@@ -170,7 +170,7 @@ struct ws_record {
 	{ "rel_pressure"     , 32, us, 0.1 }, // Current relative atmospheric pressure, multiply by 0.1 to get hPa
 	{ "abs_pressure"     , 34, us, 0.1 }, // Current absolute atmospheric pressure, multiply by 0.1 to get hPa
 	{ "date_time"        , 43, dt, 1.0 }, // Current date & time
-										  // Alarm settings
+						// Alarm settings
 	{ "alarm.hum_in.hi"       , 48, ub,  1.0 },{ "alarm.hum_in.lo"       , 49, ub, 1.0 }, // Indoor relative humidity %
 	{ "alarm.temp_in.hi"      , 50, ss,  0.1 },{ "alarm.temp_in.lo"      , 52, ss, 0.1 }, // Multiply by 0.1 to get °C
 	{ "alarm.hum_out.hi"      , 54, ub,  1.0 },{ "alarm.hum_out.lo"      , 55, ub, 1.0 }, // Indoor relative humidity %
@@ -184,7 +184,7 @@ struct ws_record {
 	{ "alarm.wind_dir"        , 82, ub, 22.5 },                                          // Multiply by 22.5 to get ° from north
 	{ "alarm.rain.hour"       , 83, us,  0.3 },{ "alarm.rain.day"        , 85, us, 0.3 }, // Multiply by 0.3 to get mm
 	{ "alarm.time"            , 87, tt,  1.0 },
-	// Maximums with timestamps
+						// Maximums with timestamps
 	{ "max.hum_in.val"       ,  98, ub, 1.0 },{ "max.hum_in.date"       , 141, dt, 1.0 },
 	{ "max.hum_out.val"      , 100, ub, 1.0 },{ "max.hum_out.date"      , 151, dt, 1.0 },
 	{ "max.temp_in.val"      , 102, ss, 0.1 },{ "max.temp_in.date"      , 161, dt, 1.0 }, // Multiply by 0.1 to get °C
@@ -200,7 +200,7 @@ struct ws_record {
 	{ "max.rain.week.val"    , 134, us, 0.3 },{ "max.rain.week.date"    , 241, dt, 1.0 }, // Multiply by 0.3 to get mm
 	{ "max.rain.month.val"   , 136, us, 0.3 },{ "max.rain.month.date"   , 246, dt, 1.0 }, // Multiply by 0.3 to get mm
 	{ "max.rain.total.val"   , 138, us, 0.3 },{ "max.rain.total.date"   , 251, dt, 1.0 }, // Multiply by 0.3 to get mm
-																						  // Minimums with timestamps
+							// Minimums with timestamps
 	{ "min.hum_in.val"       ,  99, ub, 1.0 },{ "min.hum_in.date"       , 146, dt, 1.0 },
 	{ "min.hum_out.val"      , 101, ub, 1.0 },{ "min.hum_out.date"      , 156, dt, 1.0 },
 	{ "min.temp_in.val"      , 104, ss, 0.1 },{ "min.temp_in.date"      , 166, dt, 1.0 }, // Multiply by 0.1 to get °C
@@ -209,7 +209,7 @@ struct ws_record {
 	{ "min.dewpoint.val"     , 116, ss, 0.1 },{ "min.dewpoint.date"     , 196, dt, 1.0 }, // Multiply by 0.1 to get °C
 	{ "min.abs_pressure.val" , 120, us, 0.1 },{ "min.abs_pressure.date" , 206, dt, 1.0 }, // Multiply by 0.1 to get hPa
 	{ "min.rel_pressure.val" , 124, us, 0.1 },{ "min.rel_pressure.date" , 216, dt, 1.0 }, // Multiply by 0.1 to get hPa
-																						  // Calculated rainfall, must be calculated prior to every record
+							// Calculated rainfall, must be calculated prior to every record
 	{ "rain.hour"  , WS_RAIN_HOUR , us, 0.3 }, // Multiply by 0.3 to get mm
 	{ "rain.day"   , WS_RAIN_DAY  , us, 0.3 }, // Multiply by 0.3 to get mm
 	{ "rain.week"  , WS_RAIN_WEEK , us, 0.3 }, // Multiply by 0.3 to get mm
@@ -233,7 +233,7 @@ float scale;
 }*/
 struct ws_record pywws_format[] = {
 	// Up to 4080 records with this format
-	{ "delay"	,  0, ub,  1.0 }, // Minutes since last stored reading (1:240)
+	{ "delay"	     ,  0, ub,  1.0 }, // Minutes since last stored reading (1:240)
 	{ "hum_in"       ,  1, ub,  1.0 }, // Indoor relative humidity %        (1:99)    , 0xFF means invalid
 	{ "temp_in"      ,  2, ss,  0.1 }, // Multiply by 0.1 to get °C         (-40:+60) , 0xFFFF means invalid
 	{ "hum_out"      ,  4, ub,  1.0 }, // Outdoor relative humidity %       (1:99)    , 0xFF means invalid
@@ -274,10 +274,10 @@ struct ws_record2 {
 	{ "rainin"       , WS_RAIN_HOUR       , us , WS_SCALE_CM_TO_IN       , WS_OFFSET_DEFAULT },	// - [hourly rain in]
 	{ "dailyrainin"  , WS_RAIN_DAY        , us , WS_SCALE_CM_TO_IN       , WS_OFFSET_DEFAULT },	// - [daily rain in accumulated]
 	{ "baromin"      , WS_ABS_PRESSURE    , us , WS_SCALE_RAW_TO_inHg    , WS_OFFSET_DEFAULT },	// - [barom in]
-	{ "dewptf"       , 0                  , dp , WS_SCALE_C_TO_F         , WS_OFFSET_C_TO_F }		// - [dewpoint F]
-																									// weather - [text] -- metar style (+RA)
-																									// clouds - [text] -- SKC, FEW, SCT, BKN, OVC
-																									// softwaretype - [text] ie: vws or weatherdisplay
+	{ "dewptf"       , 0                  , dp , WS_SCALE_C_TO_F         , WS_OFFSET_C_TO_F }	// - [dewpoint F]
+																								// weather - [text] -- metar style (+RA)
+																								// clouds - [text] -- SKC, FEW, SCT, BKN, OVC
+																								// softwaretype - [text] ie: vws or weatherdisplay
 };
 
 #define	WS_WUG_HOURLY_RAIN	5	// Position of hourly rain parameter

@@ -1486,24 +1486,24 @@ int read_arguments(int argc, char **argv)
 	{
 		static struct option long_options[] =
 		{
-			{ "all", no_argument,			0, 'a' },
+			{ "all", no_argument,				0, 'a' },
 			{ "status", no_argument,			&program_settings.show_status, 1 },
 			{ "alarms", no_argument,			&program_settings.show_alarms, 1 },
-			{ "settings", no_argument,		&program_settings.show_settings, 1 },
+			{ "settings", no_argument,			&program_settings.show_settings, 1 },
 			{ "maxmin", no_argument,			&program_settings.show_maxmin, 1 },
-			{ "settings", no_argument,		&program_settings.show_settings, 1 },
-			{ "easyweather", no_argument,	&program_settings.show_easyweather, 1 },
-			{ "summary", no_argument,		&program_settings.show_summary, 1 },
-			{ "quickrain", no_argument,		&program_settings.quickrain, 1 },
+			{ "settings", no_argument,			&program_settings.show_settings, 1 },
+			{ "easyweather", no_argument,		&program_settings.show_easyweather, 1 },
+			{ "summary", no_argument,			&program_settings.show_summary, 1 },
+			{ "quickrain", no_argument,			&program_settings.quickrain, 1 },
 			{ "count", required_argument,		0, 'c' },
 			{ "timezone", required_argument, 	0, 't' },
 			{ "delay", required_argument, 		0, 'd' },
-			{ "help", required_argument,			0, 'h' },
+			{ "help", required_argument,		0, 'h' },
 			{ "format", required_argument,		0, 0 },
-			{ "formatlist", no_argument,			0, 0 },
-			{ "altitude", required_argument,		0, 'A' },
+			{ "formatlist", no_argument,		0, 0 },
+			{ "altitude", required_argument,	0, 'A' },
 			{ "productid", required_argument,	0, 0 },
-			{ "vendorid", required_argument,		0, 0 },
+			{ "vendorid", required_argument,	0, 0 },
 			{ "dumpmem", required_argument,		0, 0 },
 			{ "infile", required_argument,		0, 0 },
 			{ 0, 0, 0, 0 }
@@ -1519,75 +1519,75 @@ int read_arguments(int argc, char **argv)
 
 		switch (c)
 		{
-		case 0:
-		{
-			if (!strcmp("infile", long_options[option_index].name))
+			case 0:
 			{
-				program_settings.from_file = 1;
-				strcpy(program_settings.infile, optarg);
-			}
-			else if (!strcmp("dumpmem", long_options[option_index].name))
-			{
-				program_settings.mode = dump_mode;
-				strcpy(program_settings.dumpfile, optarg);
-			}
-			else if (!strcmp("format", long_options[option_index].name))
-			{
-				program_settings.show_formatted = 1;
-				strcpy(program_settings.format_str, optarg);
-			}
-			else if (!strcmp("formatlist", long_options[option_index].name))
-			{
-				program_settings.show_formatlist = 1;
-			}
-			else if (!strcmp("productid", long_options[option_index].name))
-			{
-				sscanf(optarg, "%x", &program_settings.product_id);
-			}
-			else if (!strcmp("vendorid", long_options[option_index].name))
-			{
-				sscanf(optarg, "%x", &program_settings.vendor_id);
-			}
+				if (!strcmp("infile", long_options[option_index].name))
+				{
+					program_settings.from_file = 1;
+					strcpy(program_settings.infile, optarg);
+				}
+				else if (!strcmp("dumpmem", long_options[option_index].name))
+				{
+					program_settings.mode = dump_mode;
+					strcpy(program_settings.dumpfile, optarg);
+				}
+				else if (!strcmp("format", long_options[option_index].name))
+				{
+					program_settings.show_formatted = 1;
+					strcpy(program_settings.format_str, optarg);
+				}
+				else if (!strcmp("formatlist", long_options[option_index].name))
+				{
+					program_settings.show_formatlist = 1;
+				}
+				else if (!strcmp("productid", long_options[option_index].name))
+				{
+					sscanf(optarg, "%x", &program_settings.product_id);
+				}
+				else if (!strcmp("vendorid", long_options[option_index].name))
+				{
+					sscanf(optarg, "%x", &program_settings.vendor_id);
+				}
 
-			break;
-		}
-		case 'a': program_settings.count = 0;				break;
-		case 'v': program_settings.debug++;					break;
-		case 'm': program_settings.show_maxmin = 1;			break;
-		case 's': program_settings.show_status = 1;			break;
-		case 'e': program_settings.show_easyweather = 1;	break;
-		case 'A': program_settings.altitude = atoi(optarg); break;
-		case 'd':
-		{
-			program_settings.mode = set_mode;
-			program_settings.set_delay = 1;
-			program_settings.delay = atoi(optarg);
-			break;
-		}
-		case 't':
-		{
-			program_settings.mode = set_mode;
-			program_settings.set_timezone = 1;
-			program_settings.timezone = atoi(optarg);
-			break;
-		}
-		case 'h':
-		{
-			show_usage(argv[0]);
-			exit(0);
-		}
-		case 'c':
-		{
-			// The number of history events to fetch.
-			program_settings.count = atoi(optarg);
-			break;
-		}
-		default:
-		{
-			show_usage(argv[0]);
-			//abort();
-			break;
-		}
+				break;
+			}
+			case 'a': program_settings.count = 0;				break;
+			case 'v': program_settings.debug++;					break;
+			case 'm': program_settings.show_maxmin = 1;			break;
+			case 's': program_settings.show_status = 1;			break;
+			case 'e': program_settings.show_easyweather = 1;	break;
+			case 'A': program_settings.altitude = atoi(optarg); break;
+			case 'd':
+			{
+				program_settings.mode = set_mode;
+				program_settings.set_delay = 1;
+				program_settings.delay = atoi(optarg);
+				break;
+			}
+			case 't':
+			{
+				program_settings.mode = set_mode;
+				program_settings.set_timezone = 1;
+				program_settings.timezone = atoi(optarg);
+				break;
+			}
+			case 'h':
+			{
+				show_usage(argv[0]);
+				exit(0);
+			}
+			case 'c':
+			{
+				// The number of history events to fetch.
+				program_settings.count = atoi(optarg);
+				break;
+			}
+			default:
+			{
+				show_usage(argv[0]);
+				//abort();
+				break;
+			}
 		}
 	}
 
@@ -1609,6 +1609,8 @@ int read_arguments(int argc, char **argv)
 	}
 
 	debug = program_settings.debug;
+
+	program_settings.show_status = 1;
 
 	return 0;
 }
